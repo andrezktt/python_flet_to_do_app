@@ -1,30 +1,34 @@
 import flet as ft
 
-def main(page:ft.Page):
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.title = 'To-Do Flet'
-    
-    def add_clicked(e):
-        task_view.controls.append(ft.Checkbox(label=new_task.value))
-        new_task.value = ''
-        page.update()
-        
-    new_task = ft.TextField(hint_text="What's needs to be done?")
-    task_view = ft.Column()
-    view = ft.Column(
-        width=600,
-        controls=[
+class TodoApp(ft.Column):
+    def __init__(self):
+        super().__init__()
+        self.new_task = ft.TextField(hint_text="What's needs to be done?")
+        self.task_view = ft.Column()
+        self.width = 600
+        self.controls = [
             ft.Row(
                 controls=[
-                    new_task,
-                    ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=add_clicked)
+                   self.new_task,
+                    ft.FloatingActionButton(icon=ft.Icons.ADD, on_click=self.add_task)
                 ],
             ),
-            task_view
+            self.task_view
         ]
-    )
+        
+    def add_task(self, e):
+        self.task_view.controls.append(ft.Checkbox(label=self.new_task.value))
+        self.new_task.value = ''
+        self.update()
 
+def main(page:ft.Page):
+    page.title = 'To-Do Flet'
+    page.theme_mode = ft.ThemeMode.LIGHT
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.add(view)
+    page.update()
+    
+    todo = TodoApp()
+    
+    page.add(todo)
 
 ft.app(target=main)
